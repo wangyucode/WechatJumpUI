@@ -15,7 +15,7 @@ public class Hack extends Thread {
 
     private static Random RANDOM = new Random();
 
-    private static final float RATIO = 3.7f;
+    private static final float RATIO = 3.72f;
 
     public Hack(Controller controller) {
         this.controller = controller;
@@ -54,7 +54,7 @@ public class Hack extends Thread {
 
                     BufferedImage img = ImgLoader.load(file.getAbsolutePath());
 
-                    controller.appendText("正在计算人物中心点...\n");
+                    controller.appendText("计算人物中心点...\n");
 
                     int[] myPos = myPosFinder.find(img);
                     BufferedImage desc = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -65,7 +65,7 @@ public class Hack extends Thread {
 
                     controller.appendText("人物中心点[红色]:[" + myPos[0] + "," + myPos[1] + "]\n");
 
-                    controller.appendText("正在下一步中心点...\n");
+                    controller.appendText("计算下一步中心点...\n");
                     int[] nextPos = nextCenterFinder.find(img, myPos);
                     gPaint.setColor(Color.GREEN);
                     gPaint.fillRect(nextPos[0] - 5, nextPos[1] - 5, 10, 10);
@@ -74,6 +74,11 @@ public class Hack extends Thread {
 
                     int centerX = (nextPos[2] + nextPos[4]) / 2;
                     int centerY = (nextPos[3] + nextPos[5]) / 2;
+
+                    if (centerX <= 0 || centerY <= 0) {
+                        centerX = nextPos[0];
+                        centerY = nextPos[1] + 36;
+                    }
                     gPaint.setColor(Color.MAGENTA);
                     gPaint.fillRect(centerX - 5, centerY - 5, 10, 10);
 
