@@ -1,9 +1,6 @@
 package sample;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by chenliang on 2017/12/31.
@@ -42,43 +39,10 @@ public class MyPosFinder {
                 }
             }
         }
-        ret[0] = (maxX + minX) / 2 +3;
+        ret[0] = (maxX + minX) / 2 + 3;
         ret[1] = maxY;
         System.out.println(maxX + ", " + minX);
         System.out.println("pos, x: " + ret[0] + ", y: " + ret[1]);
         return ret;
-    }
-
-    public static void main(String... strings) throws IOException {
-        MyPosFinder t = new MyPosFinder();
-        String root = t.getClass().getResource("/").getPath();
-        System.out.println("root: " + root);
-        String imgsSrc = root + "imgs/src";
-        String imgsDesc = root + "imgs/my_pos";
-        File srcDir = new File(imgsSrc);
-        System.out.println(srcDir);
-        long cost = 0;
-        for (File file : srcDir.listFiles()) {
-            if (!file.getName().endsWith(".png")) {
-                continue;
-            }
-            System.out.println(file);
-            BufferedImage img = ImgLoader.load(file.getAbsolutePath());
-            long t1 = System.nanoTime();
-            int[] pos = t.find(img);
-            long t2 = System.nanoTime();
-            cost += (t2 - t1);
-            BufferedImage desc = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-            desc.getGraphics().drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null); // 绘制缩小后的图
-            desc.getGraphics().drawRect(pos[0] - 5, pos[1] - 5, 10, 10);
-            File descFile = new File(imgsDesc, file.getName());
-            if (!descFile.exists()) {
-                descFile.mkdirs();
-                descFile.createNewFile();
-            }
-            ImageIO.write(desc, "png", descFile);
-        }
-        System.out.println("avg time cost: " + (cost / srcDir.listFiles().length / 1_000_000));
-
     }
 }

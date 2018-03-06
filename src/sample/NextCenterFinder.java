@@ -111,11 +111,7 @@ public class NextCenterFinder {
             int[] item = queue.poll();
             int i = item[0];
             int j = item[1];
-//            int dx = Math.abs(i - myPos[0]);
-//            int dy = Math.abs(j - myPos[1]);
-//            if (dy > dx) {
-//                continue;
-//            }
+
             if (j >= myPos[1]) {
                 continue;
             }
@@ -167,48 +163,6 @@ public class NextCenterFinder {
     public static int[] buildArray(int i, int j) {
         int[] ret = {i, j};
         return ret;
-    }
-
-    public static void main(String... strings) throws IOException {
-        //  int[] excepted = {0, 0};
-        NextCenterFinder t = new NextCenterFinder();
-        String root = t.getClass().getResource("/").getPath();
-        System.out.println("root: " + root);
-        String imgsSrc = root + "imgs/src";
-        String imgsDesc = root + "imgs/next_center";
-        File srcDir = new File(imgsSrc);
-        System.out.println(srcDir);
-        MyPosFinder myPosFinder = new MyPosFinder();
-        long cost = 0;
-        for (File file : srcDir.listFiles()) {
-            System.out.println(file);
-            BufferedImage img = ImgLoader.load(file.getAbsolutePath());
-            long t1 = System.nanoTime();
-            int[] myPos = myPosFinder.find(img);
-            int[] pos = t.find(img, myPos);
-            long t2 = System.nanoTime();
-            cost += (t2 - t1);
-            BufferedImage desc = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics g = desc.getGraphics();
-            g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
-            g.setColor(Color.RED);
-            g.fillRect(pos[0] - 5, pos[1] - 5, 10, 10);
-            g.fillRect(pos[2] - 5, pos[3] - 5, 10, 10);
-            g.fillRect(pos[4] - 5, pos[5] - 5, 10, 10);
-            if (pos[2] != Integer.MAX_VALUE && pos[4] != Integer.MIN_VALUE) {
-                g.fillRect((pos[2] + pos[4]) / 2 - 5, (pos[3] + pos[5]) / 2 - 5, 10, 10);
-            } else {
-                g.fillRect(pos[0], pos[1] + 36, 10, 10);
-            }
-            File descFile = new File(imgsDesc, file.getName());
-            if (!descFile.exists()) {
-                descFile.mkdirs();
-                descFile.createNewFile();
-            }
-            ImageIO.write(desc, "png", descFile);
-        }
-        System.out.println("avg time cost: " + (cost / srcDir.listFiles().length / 1_000_000));
-
     }
 
 }
